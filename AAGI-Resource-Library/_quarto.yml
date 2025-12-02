@@ -19,7 +19,7 @@ website:
         - href: pages/interpreting_outputs/summary_statistics.qmd
           text: "Summary Statistics"
         - href: pages/interpreting_outputs/parametric_significance_tests.qmd
-          text: "Hypothesis Testing"
+          text: "Hypothesis Test"
       - href: pages/count_data.qmd
         text: "Analysing Count Data"
       - about.qmd
