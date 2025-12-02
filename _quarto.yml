@@ -2,9 +2,6 @@ project:
   type: website
   output-dir: docs
 
-execute:
-  eval: false
-
 website:
   title: "AAGI-Resource-Library"
   navbar:

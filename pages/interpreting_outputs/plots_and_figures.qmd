@@ -1,5 +1,7 @@
 ---
 title: "Plots and Figures"
+execute: 
+  eval: false
 ---
 
 ```{r}
