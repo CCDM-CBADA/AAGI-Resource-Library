@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Parametric Significance Tests – AAGI-Resource-Library</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-56ce59c3fcb2b14b795df6d7beceb2f2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">AAGI-Resource-Library</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-interpreting-outputs" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Interpreting Outputs</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-interpreting-outputs">    
+        <li>
+    <a class="dropdown-item" href="../../pages/interpreting_outputs/introduction.html">
+ <span class="dropdown-text">Interpreting Analysis Outputs</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../pages/interpreting_outputs/plots_and_figures.html">
+ <span class="dropdown-text">Plots and Figures</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../pages/interpreting_outputs/summary_statistics.html">
+ <span class="dropdown-text">Summary Statistics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../pages/interpreting_outputs/parametric_significance_tests.html">
+ <span class="dropdown-text">Hypothesis Testing</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/count_data.html"> 
+<span class="menu-text">Analysing Count Data</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#simpler-methods-for-comparing-group-means" id="toc-simpler-methods-for-comparing-group-means" class="nav-link active" data-scroll-target="#simpler-methods-for-comparing-group-means">Simpler Methods for Comparing Group Means</a></li>
+  <li><a href="#t-test" id="toc-t-test" class="nav-link" data-scroll-target="#t-test"><strong>t-test</strong></a></li>
+  <li><a href="#f-test-anova" id="toc-f-test-anova" class="nav-link" data-scroll-target="#f-test-anova"><strong>F-test (ANOVA)</strong></a></li>
+  <li><a href="#tests-for-categorical-or-ordinal-data" id="toc-tests-for-categorical-or-ordinal-data" class="nav-link" data-scroll-target="#tests-for-categorical-or-ordinal-data">Tests for Categorical or Ordinal Data:</a></li>
+  <li><a href="#chi-squared-test" id="toc-chi-squared-test" class="nav-link" data-scroll-target="#chi-squared-test"><strong>Chi-Squared Test</strong></a></li>
+  <li><a href="#z-test" id="toc-z-test" class="nav-link" data-scroll-target="#z-test"><strong>z-test</strong></a></li>
+  <li><a href="#model-based-methods-for-complex-data" id="toc-model-based-methods-for-complex-data" class="nav-link" data-scroll-target="#model-based-methods-for-complex-data">Model-Based Methods for Complex Data:</a></li>
+  <li><a href="#wald-test" id="toc-wald-test" class="nav-link" data-scroll-target="#wald-test"><strong>Wald test</strong></a></li>
+  <li><a href="#likelihood-ratio-test" id="toc-likelihood-ratio-test" class="nav-link" data-scroll-target="#likelihood-ratio-test"><strong>Likelihood Ratio Test</strong></a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Parametric Significance Tests</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div data-custom-style="TextBoxStyle">
+<p>Parametric significance tests assess whether model parameters contribute meaningfully to explaining the variability in data. These tests are crucial for determining whether observed differences are statistically valid and help guide decisions on which factors should be included in further analysis.</p>
+<p>The choice of test depends on the type of data, the research question, the dataset’s structure, and the assumptions underlying the statistical model. These tests are typically used when the data is assumed to follow a certain distribution (e.g., normal distribution) and often involve comparing means or evaluating relationships between variables.</p>
+</div>
+<section id="simpler-methods-for-comparing-group-means" class="level2">
+<h2 class="anchored" data-anchor-id="simpler-methods-for-comparing-group-means">Simpler Methods for Comparing Group Means</h2>
+<p>t-tests and ANOVA are commonly used in trial data analysis where the predictor variables are categorical, and the response variable is continuous. These tests compare the mean of each group’s response data to identify whether there are significant differences between groups. Both tests operate by comparing observed data with a fitted model and assume that the residuals (the differences between each observed value and the predicted group mean) are approximately normally distributed. This assumption is crucial because the reliability of the tests depends on the normality of the residuals, which is influenced by the underlying distribution of the raw data. If the residuals deviate significantly from normality, the results may be misleading.</p>
+<p><strong>Fitting a Linear Model:</strong> When fitting a linear model using ANOVA or a t-test, the model generates predicted values for each observation, based on the entire dataset and accounting for the effects of predictor variables (e.g., treatments or environmental conditions). These predicted values represent the expected value for each group, reflecting both overall trends and specific conditions for each group. By incorporating these group-level patterns, the model helps smooth out irregularities in the residuals, making them more likely to follow a normal distribution—even when the raw data itself does not. This smoothing effect helps ensure that the assumption of normality is more likely to hold after fitting the model.</p>
+<p>While ANOVA and t-tests can be applied to discrete data such as weed counts, emergence counts, or panicle counts if the data follows a relatively normal distribution, these tests are generally not the best choice for count data, even when the data is normally distributed. Count data often follows non-normal distributions, such as Poisson or negative binomial, which violate the normality assumption required by these tests. In such cases, generalized linear models (GLMs) are a more suitable alternative, as they can model the specific distributional properties of count data (e.g., Poisson or negative binomial), leading to more reliable and accurate results.</p>
+<p>Challenges in Agricultural Research: While t-tests and ANOVA are effective in controlled experimental designs with carefully managed conditions, they are less suitable for on-farm experiments, where environmental factors are often uncontrollable and vary significantly. Agricultural data is typically more complex, involving repeated measurements, hierarchical structures (e.g., fields, plots, and individual plants), and interactions between treatment and environmental variables. These complexities introduce correlations between observations or non-independence within groups, which t-tests and ANOVA are not designed to handle. To account for these factors and ensure valid conclusions, more advanced statistical methods, such as mixed-effects models, are often required.</p>
+<p>t-tests and ANOVA are used in the analysis of trial data whwere the predictor variables are categorical and the response data is contiuous and function by comparing the means of different groups to identify significant differences between them. Both tests operate by comparing the observed data against a fitted model, and they assume that the residuals (the differences between the observed values and the model’s predicted values) are normally distributed. This assumption is important because it underpins the reliability of these tests. If the residuals deviate significantly from normality, the results of these tests may be misleading.</p>
+<p>The process of fitting a linear model, whether using ANOVA or a t-test, can help mitigate the impact of skewness or extreme values in the raw data. These tests essentially create a model that predicts the group means based on the observed data (is this all the groups together or group by group??), helping to smooth out any irregularities in the data (is this because it’s including the other predictors effects in the predicted value of each group??. In doing so, the residuals — the differences between each observed value and its group’s predicted mean — may become more normally distributed, even when the raw data itself does not follow a normal distribution. This process can help to approximate normality in the residuals, which is why the assumptions of normality are more likely to hold after fitting the model. However, some data such as count data (e.g., weed counts, emergence counts, or panicle counts), which often follows non-normal distributions like the Poisson or negative binomial distributions are sometimes too not normally distributed for anova or t-test to mitigatre against their effect ont eh residuals.</p>
+<p>To clarify, t-tests and ANOVA work by comparing the means of different groups based on the data at hand. For example, ANOVA compares group means by fitting a linear model to data with categorical predictors (e.g., comparing the means of different treatment groups). This linear model calculates predicted group means, and the residuals reflect the difference between the observed values and these predicted means.</p>
+<p>However, there are certain situations where the process may not be enough to ensure that the residuals are normally distributed. When data is highly skewed or contains extreme values (i.e., long tails), or when the sample size within each group is small (typically less than 30, which is often the case in small-plot agricultural trials), assessing the normality of residuals becomes more difficult. Smaller sample sizes mean there’s less data to reliably detect patterns of non-normality, which can compromise the validity of the test results if the residuals are not approximately normally distributed or if normality cannot be clearly assessed.</p>
+<p>Furthermore, while t-tests and ANOVA are effective when used in controlled experimental designs with carefully managed conditions, they are less suitable for on-farm experiments where environmental factors are often uncontrolled. Agricultural data can also be more complex, involving repeated measurements, hierarchical structures (e.g., multiple levels of observations such as fields, plots, and plants), and potential interactions between variables like treatment and environmental effects. These complexities cannot be fully captured by the standard t-test or ANOVA models. As a result, these methods may not adequately address the correlation between observations or the non-independence of data points within plots, which are common in real-world agricultural experiments.</p>
+<p>Tests such as t-tests and ANOVA are commonly used to compare the means of different groups. These tests assume that the residuals (the differences between the observed values (raw data) and the model’s fitted values) are normally distributed.</p>
+<p>While the process of fitting a linear model (such as ANOVA or a t-test) reduces the impact of skewness or extreme values in the raw data by focusing on group-level patterns and generating predicted means. As a result, the residuals (the differences between the observed values and these predicted means) may become more normally distributed, even when the raw data is not. This smoothing effect helps to approximate normality in the residuals, making the assumptions of normality more likely to hold.</p>
+<p>While the process of fitting a linear model with ANOVA or t-test can help reduce the impact of skewness or long tails in the raw data, leading to more normal residuals, the likelihood of non-normal residuals or uncertainty about their distribution increases when the data is highly skewed, has heavy tails, or when the sample size within each group is small (often less than 30, which is common in small-plot trials). Smaller sample sizes make it more difficult to assess the normality of residuals, as there may not be enough data to reliably detect patterns of non-normality. As a result, the validity of test results may be compromised if the residuals are not approximately normally distributed or if the assessment of normality is unclear.</p>
+<p>Moreover, while t-tests and ANOVA are effective in controlled experimental designs with tightly managed conditions, they are less suitable for on-farm experiments where environmental factors often play a significant role and are challenging to control. These tests also do not account for more complex data structures, such as hierarchical data (e.g., multiple levels of observation like fields, plots, and plants) or interactions between variables (e.g., environmental and treatment effects). Furthermore, agricultural data often involves repeated measurements, correlations between observations, or non-independence within plots, which these tests cannot adequately address.</p>
+</section>
+<section id="t-test" class="level2">
+<h2 class="anchored" data-anchor-id="t-test"><strong>t-test</strong></h2>
+<p>The t-test compares the means of two groups to determine if the difference between them is statistically significant.</p>
+<ol type="1">
+<li><strong>independent t-test</strong> Compares means of two independent groups.</li>
+<li><strong>Paired t-test</strong> Compares two measurements taken from the same subjects (before/after treatment, treatment/control).</li>
+</ol>
+<p><strong>Output &amp; Interpretation</strong>:</p>
+<ul>
+<li><strong>t-statistic</strong>: Measures the difference between group means relative to the variability in the data. Larger values indicate stronger differences between the groupss</li>
+<li><strong>Degrees of freedom (df)</strong>: Represents the sample size adjusted for the number of estimated parameters. It influences the reliability of the test.</li>
+<li><strong>P-value</strong>: A p-value ≤ 0.05 indicates that the means differ significantly, suggesting the observed difference is unlikely due to chance. A p-value &gt; 0.05 suggests the means are not significantly different, and any observed variation is likely due to random fluctuations.</li>
+</ul>
+</section>
+<section id="f-test-anova" class="level2">
+<h2 class="anchored" data-anchor-id="f-test-anova"><strong>F-test (ANOVA)</strong></h2>
+<p>The F-test is used to compare the means of three or more groups, assessing whether there are statistically significant differences between them. It compares variance between groups to variance within groups to determine if the observed differences are meaningful.</p>
+<ol type="1">
+<li><strong>One-way ANOVA</strong>: Tests whether mean differences exist among multiple independent groups based on a single factor.</li>
+<li><strong>Two-way ANOVA</strong>: Evaluates the effects of two factors simultaneously, considering their interactions, to determine how they influence the response variable.</li>
+</ol>
+<p><strong>Outputs &amp; Interpretation:</strong></p>
+<ul>
+<li><strong>F-statistic</strong>: Measures the ratio of variance between groups to variance within groups. A larger F-value suggests stronger evidence that group means are different.</li>
+<li><strong>Degrees of freedom (df)</strong>: Split into the model (number of groups minus one) and residuals (remaining data points not accounted for by the groups).</li>
+<li><strong>P-value</strong>:
+<ul>
+<li><strong>p-value ≤ 0.05</strong> suggests at least one group differs significantly, indicating that the observed differences are unlikely due to chance.</li>
+<li><strong>p-value &gt; 0.05</strong> suggests that the differences across groups may be random and not due to a meaningful effect.</li>
+</ul></li>
+</ul>
+</section>
+<section id="tests-for-categorical-or-ordinal-data" class="level2">
+<h2 class="anchored" data-anchor-id="tests-for-categorical-or-ordinal-data">Tests for Categorical or Ordinal Data:</h2>
+<p>Tests for categorical or ordinal data are used to examine relationships between variables where the response is either categorical (nominal) or ordinal.</p>
+<p><strong>Categorical data</strong>, also known as nominal data, consists of two or more categories without any intrinsic ordering. For example, binary responses such as disease presence or absence, or a list of two or more weed species or diseases present in each plot. In this case, the categories are simply labels with no meaningful numerical value or ranking attached.</p>
+<p>Ordinal data is similar to categorical data, but the categories have a clear inherent order. However, unlike interval data, the distances between categories are not necessarily both standardised and uniform. For example, disease severity ratings or growth stage scales. A disease severity rating might rely on observational assessments whereby each plot is assigned a number based on the observers subjective assessment of whether the appropriate rating is 1 = no disease, 2 = mild, 3 = severe - in this example different observers may subjectively assign different ratings for the same plots and it is not necessarily expected that the difference between 1 “no disease” and 2”mild” is the same as thd difference betwen 2”mild and 3”severe so the data is neither standardised or uniform. The Zadoks’ Growth Stage Scale, on the other hand follows a consistent framework for describing plant development to help ensure that categories are definied or applied in a standardised way. However, this doesn’t account for growth that sits between specified categories and the intervals between stages are not necessarily uniform; the amount of growth or time between stages can vary depending on factors like plant species, environmental conditions, or specific growing circumstances. For example, the difference between Z1 (main shoot leaf production) and Z2 (tiller production) may not be the same as the difference between Z3 (stem elongation) and Z4 (booting). therefore while Zadok’s is a more standardised measure, and uniformity is improved, the Zadoks scale is considered ordinal in nature. While these stages allow us to rank the categories, calculating an “average” value is not meaningful due to the non-uniformity of the intervals.</p>
+<p><strong>Ordinal data</strong> is similar to categorical data, but the categories have a clear, inherent order. However, unlike interval data, the distances between categories are not uniform or standardised. For example, disease severity ratings or growth stage scales, such as the Zadoks Growth Stage Scale, assign numbers to categories (e.g., 1 = no disease, 2 = mild, 3 = severe) or stages of plant growth. Although these stages follow a logical sequence reflecting physical development, the intervals between them are not necessarily equal. For instance, the difference between Z1 (main shoot leaf production) and Z2 (tiller production) may not be the same as the difference between Z3 (stem elongation) and Z4 (booting). As a result, while ordinal scales allow us to rank categories, calculating an “average” value is not meaningful.</p>
+<p>Note: Ordinal data often involves subjective or relative measures, and calculating means can be misleading because the intervals between categories may not be consistent.</p>
+<p>Importance of Proper Analysis For both categorical and ordinal data, comparing group means is inappropriate. For example, computing the average disease severity across plots doesn’t make sense because the levels (e.g., mild vs.&nbsp;severe disease) are not equidistant. Instead, tests for categorical or ordinal data focus on comparing groups or categories using methods that examine the distribution of counts or the association between categories.</p>
+<p>Chi-Squared Test The chi-squared test is used to analyse categorical data and determine whether observed frequencies differ significantly from expected values. There are two primary applications:</p>
+<p>Goodness-of-Fit Test: Assesses whether the distribution of a single categorical variable matches an expected distribution. For example, it can evaluate whether seed germination rates follow predicted proportions across different environmental conditions. The expected distribution can be based on previous knowledge, literature, or predefined hypotheses. This doesn’t always assume an even split of categories—it can accommodate expected distributions that reflect different proportions for each category.</p>
+<p>Chi-Squared Test for Independence: Tests whether two categorical variables are associated. For example, it can determine if fertilizer type is related to crop growth categories.</p>
+<p>Output &amp; Interpretation:</p>
+<p>Chi-square statistic: Measures the difference between observed and expected frequencies in categorical data. Higher values suggest stronger deviations from expected values.</p>
+<p>Degrees of freedom (df): Calculated based on the number of categories minus constraints, determining the flexibility in comparing distributions.</p>
+<p>P-value:</p>
+<p>A p-value ≤ 0.05 indicates a significant difference or association, meaning the observed data does not match the expected values (Goodness-of-Fit) or that the variables are likely related (Independence Test).</p>
+<p>A p-value &gt; 0.05 implies the observed differences or associations are likely due to random variation, rather than a meaningful effect.</p>
+<p>z-test The z-test is often used to compare proportions in categorical data, especially when sample sizes are large and the population variances are known. It can test whether the observed proportions in different categories significantly differ from expected proportions. The expected proportions are typically based on known population values or theoretical assumptions, such as those derived from previous research or established models.</p>
+<p>For example, in the context of a two-sample z-test, the expected proportion may come from existing literature, where a specific difference between two groups (e.g., 70% success rate for one treatment and 50% for another) has been well-established.</p>
+<p>Output &amp; Interpretation:</p>
+<p>z-score: Measures how far a sample proportion deviates from the population proportion in standard deviations.</p>
+<p>P-value:</p>
+<p>A p-value ≤ 0.05 suggests a significant difference in proportions between groups.</p>
+<p>A p-value &gt; 0.05 indicates no meaningful difference.</p>
+<p>Tests for categorical or ordinal data are used to examine relationships between variables where the response is either categorical (nominal) or ordinal.</p>
+<p>Categorical data (sometimes called nominal data) consists of two or more categories with no intrinsic ordering. For example, binary responses such as disease presence or absence, or a list or two or more weed species or diseases present in each plot. In these cases, the categories are simply labels with no ranking or meaningful numerical value attached.</p>
+<p>Ordinal data is similar to categorical data, but the categories have a clear order. However, the distances between categories are not uniform or standardised. For instance, disease ratings or growth stage scales might assign numbers to levels (e.g., 1 = no disease, 2 = mild, 3 = severe), but the difference between the categories is not necessarily equal. For example, the difference in disease severity between “mild” (2) and “severe” (3) may not be the same as the difference between “none” (1) and “mild” (2). These scales allow us to rank the categories but do not make it meaningful to calculate the “average” value.</p>
+<p><strong>Note:</strong> Ordinal data often involves subjective or relative measures, and calculating means can be misleading because the intervals between categories may not be consistent.</p>
+<p>For both types of data, comparing group means is not appropriate. For example, it would not make sense to compute the average disease presence across plots because the levels (e.g., mild vs.&nbsp;severe disease) are not equidistant. Tests for categorical or ordinal data, therefore, focus on comparing groups or categories using other methods, such as examining the distribution of counts or the association between different categories.</p>
+</section>
+<section id="chi-squared-test" class="level2">
+<h2 class="anchored" data-anchor-id="chi-squared-test"><strong>Chi-Squared Test</strong></h2>
+<p>The chi-squared test is used to analyse categorical data and determine whether observed frequencies differ significantly from expected values. There are two primary applications:</p>
+<ol type="1">
+<li><strong>Goodness-of-Fit Test:</strong> Assesses whether the distribution of a single categorical variable matches an expected distribution. For example, it can evaluate whether seed germination rates follow predicted proportions across different environmental conditions.</li>
+<li><strong>Chi-Squared Test for Independence:</strong> Tests whether two categorical variables are associated. For example, it can determine if fertiliser type is related to crop growth categories.</li>
+</ol>
+<p><strong>Output &amp; Interpretation:</strong></p>
+<ul>
+<li><p><strong>Chi-square statistic</strong>: Measures the difference between observed and expected frequencies in categorical data. Higher values suggest stronger deviations from expected values.</p></li>
+<li><p><strong>Degrees of freedom (df)</strong>: Calculated based on the number of categories minus constraints, determining the flexibility in comparing distributions.</p></li>
+<li><p><strong>P-value</strong>:</p>
+<ul>
+<li><p>A p-value ≤ 0.05 indicates a significant difference or association, meaning the observed data does not match the expected values (Goodness-of-Fit) or that the variables are likely related (Independence Test).</p></li>
+<li><p>A p-value &gt; 0.05 implies the observed differences or associations are likely due to random variation, rather than a meaningful effect.</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="z-test" class="level2">
+<h2 class="anchored" data-anchor-id="z-test"><strong>z-test</strong></h2>
+<p>The z-test is often used to compare proportions in categorical data, especially when sample sizes are large and the population variances are known. It can test whether the observed proportions in different categories significantly differ from expected proportions.</p>
+<p><strong>Output &amp; Interpretation</strong></p>
+<ul>
+<li><strong>z-score:</strong> Measures how far a sample proportion deviates from the population proportion in standard deviations.</li>
+<li><strong>P-value</strong>:
+<ul>
+<li><p>A <strong>p-value ≤ 0.05</strong> suggests a significant difference in proportions between groups.</p></li>
+<li><p>A <strong>p-value &gt; 0.05</strong> indicates no meaningful difference.</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="model-based-methods-for-complex-data" class="level2">
+<h2 class="anchored" data-anchor-id="model-based-methods-for-complex-data">Model-Based Methods for Complex Data:</h2>
+<p>Model-based methods are more advanced tests that require fitting statistical models to the data. These tests are especially useful for analysing complex relationships, including hierarchical structures and interactions. They are also effective when dealing with non-normal data distributions or real-world variability, such as in agricultural trials where environmental influences are at play.</p>
+</section>
+<section id="wald-test" class="level2">
+<h2 class="anchored" data-anchor-id="wald-test"><strong>Wald test</strong></h2>
+<p>The Wald test assesses individual model parameters to determine whether specific predictors significantly influence the response variable. It is suitable for both binary and continuous response variables.</p>
+<p><strong>Output &amp; Interpretation:</strong></p>
+<ul>
+<li><p><strong>Chi-square statistic</strong>: Evaluates whether model coefficients differ significantly from sero. Larger values suggest greater evidence against the null hypothesis.</p></li>
+<li><p><strong>Degrees of freedom (df)</strong>: Represents the number of parameters being tested.</p></li>
+<li><p><strong>P-value</strong>:</p>
+<ul>
+<li><p>A <strong>p-value ≤ 0.05</strong> suggests a predictor significantly influences the response variable.</p></li>
+<li><p>A <strong>p-value &gt; 0.05</strong> indicates no meaningful impact.</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="likelihood-ratio-test" class="level2">
+<h2 class="anchored" data-anchor-id="likelihood-ratio-test"><strong>Likelihood Ratio Test</strong></h2>
+<p>The Likelihood Ratio Test compares two nested models to determine whether adding predictors improves the model’s explanatory power. This test is often more reliable than the Wald test when sample sizes are small or when model complexity is high.</p>
+<p><strong>Output &amp; Interpretation:</strong></p>
+<ul>
+<li><p><strong>Likelihood ratio statistic</strong>: Compares how well two models fit the data. Larger values indicate better improvements in model fit with the added predictors.</p></li>
+<li><p><strong>Degrees of freedom (df)</strong>: Reflects the difference in complexity between the two models.</p></li>
+<li><p><strong>P-value</strong>:</p>
+<ul>
+<li><p><strong>p-value ≤ 0.05</strong> suggests adding the predictor significantly improves the model’s performance.</p></li>
+<li><p><strong>p-value &gt; 0.05</strong> indicates that removing the predictor does not weaken the model, meaning it may not be necessary.</p></li>
+</ul></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
