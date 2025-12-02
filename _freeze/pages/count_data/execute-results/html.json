@@ -1,0 +1,15 @@
+{
+  "hash": "37f8d79ff4ca1833896337c92d5b239b",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Count Data!\"\nauthor: \"Rose\"\n---\n\nHello\n\n\n::: {.cell}\n\n```{.r .cell-code}\nprint(\"ligma\")\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] \"ligma\"\n```\n\n\n:::\n:::\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

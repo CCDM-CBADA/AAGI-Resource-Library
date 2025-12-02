@@ -1,7 +1,5 @@
 ---
 title: "Plots and Figures"
-execute: 
-  eval: false
 ---
 
 ```{r}
@@ -11,9 +9,9 @@ execute:
 # Template libraries:
 library(AAGIPalettes)
 library(AAGIThemes)
-library(asreml)
+# library(asreml)
 library(broom.mixed)
-library(CBADA)
+# library(CBADA)
 library(dplyr)
 library(flextable)
 library(gapminder)
