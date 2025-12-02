@@ -1,0 +1,96 @@
+---
+title: "Summary Statistics"
+---
+
+Summary statistics are a key component of descriptive statistics, providing numerical measures and language to help summarise and describe the main features of a dataset. These include:
+
+-   **Measures of central tendency** (e.g., mean, median, and mode), which summarise the "centre" of the data.
+-   **Measures of variability** (e.g., range, variance, standard deviation, and coefficient of variation), which describe the spread or dispersion of the data.
+-   **Correlation coefficients**, which assess the strength and direction of relationships between variables.
+-   **Skewness**, which describes the symmetry and shape of the data
+
+Together, these statistics help to simplify and summarise raw data, allowing for the identification of trends, patterns, and anomalies before moving on to more complex statistical modeling or hypothesis testing. By distilling data into key figures, summary statistics make it easier to compare variables, detect outliers, and understand potential relationships or dependencies within the data.
+
+## Mean
+
+The mean is the average value, calculated by summing all data points and dividing by the total number of observations.
+
+The mean provides a general idea of the typical value in a dataset. However, it can be influenced by extreme values (outliers), which can make it less reliable for datasets with skewed distributions.
+
+## Median
+
+The median is the middle value when the data is arranged in order. If there is an even number of values, the median is the average of the two middle numbers.
+
+The median is less affected by outliers, making it a more reliable measure of central tendency for skewed datasets.
+
+## Mode
+
+The mode is the most frequently occurring value in a dataset. A dataset can be:
+
+-   **Unimodal** (one mode)
+
+-   **Bimodal** (two modes)
+
+-   **Multimodal** (multiple modes).
+
+If no value repeats, there is no mode.
+
+The mode identifies the most common value in the dataset, making it useful for analysing categorical or discrete numerical data.
+
+## Variance
+
+Variance measures how far the data points deviate from the mean.
+
+A higher variance indicates that the data points are more spread out, while a lower variance suggests that the data points are more tightly clustered around the mean.
+
+## Standard Deviation (SD)
+
+Standard deviation is the square root of the variance, representing the average distance of data points from the mean.
+
+A small standard deviation indicates that the values are consistently close to the mean, while a large standard deviation suggests greater variability or spread in the data.
+
+## Coefficient of Variation (CV)
+
+The coefficient of variation is the standard deviation divided by the mean, expressed as a percentage. It is useful for comparing variability across datasets with different units or scales.
+
+A higher CV indicates greater relative variability, while a lower CV suggests more stable, consistent data.
+
+## Correlation Coefficient (Pearson’s r)
+
+The correlation coefficient measures the strength and direction of the linear relationship between two numerical variables. The value of r ranges from -1 to +1:
+
+-   **r = +1**: Perfect positive correlation (as one variable increases, the other increases).
+
+-   **r = -1**: Perfect negative correlation (as one variable increases, the other decreases).
+
+-   **r = 0**: No correlation (variables are unrelated).
+
+This statistic helps assess whether and how strongly two variables are related, providing insight into whether one variable can predict changes in another.
+
+## Skewness
+
+Skewness describes the symmetry of the data distribution:
+
+-   **Symmetrical**: A bell-shaped curve, typical of a normal distribution, with values clustered around the mean.
+
+-   **Right-Skewed (Positive Skew)**: A distribution with a longer tail on the right, indicating more low values.
+
+-   **Left-Skewed (Negative Skew)**: A distribution with a longer tail on the left, indicating more high values.
+
+Skewness helps identify the direction of the data’s asymmetry and can give insights into the nature of the distribution.
+
+## Additional Notes on Interpreting Summary Statistics
+
+When interpreting summary statistics, it’s important to consider multiple measures together rather than in isolation. This approach provides a fuller understanding of the data and helps prevent misleading conclusions. Here are a few examples:
+
+-   A larger **range** and higher **standard deviation** indicate greater variability in the data.
+
+-   A wide **range** with a small **standard deviation** may suggest the presence of outliers.
+
+-   If the **mean** is greater than the **median**, the distribution is likely **right-skewed**.
+
+-   If the **mean** is smaller than the **median**, the distribution is likely **left-skewed**.
+
+-   If the **mean** and **median** are similar, the data is likely **normally distributed**.
+
+By examining these statistics together, you can gain a more comprehensive understanding of your data’s structure and avoid drawing conclusions based on a single statistic.

@@ -1,0 +1,33 @@
+project:
+  type: website
+
+execute:
+  eval: false
+
+website:
+  title: "AAGI-Resource-Library"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - text: "Interpreting Outputs"
+        menu:
+        - href: pages/interpreting_outputs/introduction.qmd
+          text: "Interpreting Analysis Outputs"
+        - href: pages/interpreting_outputs/plots_and_figures.qmd
+          text: "Plots and Figures"
+        - href: pages/interpreting_outputs/summary_statistics.qmd
+          text: "Summary Statistics"
+        - href: pages/interpreting_outputs/parametric_significance_tests.qmd
+          text: "Hypothesis Testing"
+      - href: pages/count_data.qmd
+        text: "Analysing Count Data"
+      - about.qmd
+
+format:
+  html:
+    theme:
+      - simplex
+      - brand
+    css: styles.css
+    toc: true

@@ -1,0 +1,398 @@
+---
+title: "Plots and Figures"
+---
+
+```{r}
+#| label: library_setup
+#| include: false
+
+# Template libraries:
+library(AAGIPalettes)
+library(AAGIThemes)
+library(asreml)
+library(broom.mixed)
+library(CBADA)
+library(dplyr)
+library(flextable)
+library(gapminder)
+library(ggplot2)
+library(ggtext)
+library(knitr)
+library(officer)
+library(patchwork)
+library(performance)
+library(report)
+library(rstatix)
+library(stringr)
+library(tibble)
+library(tidyverse)
+```
+
+::: {custom-style="TextBoxStyle"}
+In data analysis, visualisations are essential for providing a clear and intuitive understanding of complex data sets. Tools like histograms, box plots, and scatter plots help to uncover patterns, relationships, and trends that may not be immediately apparent from raw data alone. By presenting data graphically, visualisations allow analysts to spot outliers, assess distribution shapes, and interpret the strength and direction of correlations. This section will explore different types of visualisations used in descriptive statistics, explaining their purpose and how they help in drawing meaningful insights from data.
+:::
+
+## Histograms
+
+```{r histogram-examples-scaled-for-web}
+#| echo: false
+#| warning: false
+
+# Set the number of samples for each distribution
+n <- 1000
+
+# Data for example histograms
+eda_data <- 
+  data.frame(dist_type = factor(rep(c(
+    "Normal Distribution", 
+    "Skewed Distribution", 
+    "Bimodal Distribution", 
+    "Uniform Distribution", 
+    "Exponential Distribution", 
+    "Poisson Distribution", 
+    "Log-normal Distribution"
+    ), 
+    each = n)),
+  value = c(
+    rnorm(n, 50, 10),                       # Normal Distribution
+    rlnorm(n, 3.5, 0.5),                   # Skewed Distribution (Log-normal)
+    c(rnorm(n/2, 30, 5), rnorm(n/2, 70, 5)), # Bimodal Distribution
+    runif(n, min = 20, max = 80),          # Uniform Distribution
+    rexp(n, rate = 0.1),                   # Exponential Distribution
+    rpois(n, lambda = 5),                  # Poisson Distribution
+    rlnorm(n, meanlog = 4, sdlog = 1)      # Log-normal Distribution
+  )
+)
+
+# Custom function to calculate a maximum of two modes using kernel density estimation (KDE)
+get_modes_kde <- function(x) {
+  density_est <- density(x)
+  local_max <- which(diff(sign(diff(density_est$y))) == -2) # Identifying local maxima
+  mode_vals <- density_est$x[local_max]
+  
+  # Return only up to two modes
+  if (length(mode_vals) > 2) {
+    mode_vals <- mode_vals[1:2]
+  }
+  return(mode_vals)
+}
+
+# Compute mean, median, modes for each distribution type
+eda_summary <- eda_data %>%
+  group_by(dist_type) %>%
+  summarise(mean_val = mean(value),
+            median_val = median(value),
+            mode_vals = list(get_modes_kde(value))  # Get modes via KDE
+            ) %>%
+  mutate(
+    mode_1 = sapply(mode_vals, function(x) if (length(x) > 0) x[1] else NA), # First mode
+    mode_2 = ifelse(dist_type == "Bimodal Distribution",   # Set mode_2 only for bimodal distribution
+                    sapply(mode_vals, function(x) if (length(x) > 1) x[2] else NA), 
+                    NA)  # Otherwise NA
+  ) %>%
+  select(-mode_vals)
+
+# Pivot the summary statistics for easy mapping in ggplot
+eda_summary_long <- eda_summary %>%
+  pivot_longer(cols = c(mean_val, median_val, mode_1, mode_2),
+               names_to = "stat_type", values_to = "stat_value") %>%
+  filter(!is.na(stat_value))  # Remove any NA values (e.g., mode_2 for unimodal distributions)
+
+# Merge summary statistics with the original data
+eda_data <- eda_data %>%
+  left_join(eda_summary_long, by = "dist_type", relationship = "many-to-many")
+
+############# define a function for example histograms #################
+create_histogram_plot <- function(data, dist_type, caption_text, binwidth = 6, fill_color = "#F2F2F2", line_color = "#414042") {
+  legend_labels <- if (dist_type == "Bimodal Distribution") c("Mean", "Median", "Mode", "") else c("Mean", "Median", "Mode")
+  
+  ggplot(data) +
+    geom_histogram(aes(x = value), binwidth = binwidth, fill = fill_color, color = line_color) +
+    geom_vline(aes(xintercept = stat_value, linetype = stat_type, color = stat_type), size = 1) +
+    labs(x = "Value", 
+         y = "Frequency",
+         caption = str_wrap(caption_text, 
+                            if(dist_type == "Skewed Distribution") 40
+                            else 41)
+         # caption = str_wrap(caption_text, 
+         #                    if (dist_type == "Skewed Distribution") 27 else 28)
+         ) +
+    scale_color_manual(labels = legend_labels, values = c("blue", "black", "black", "black")) +
+    scale_linetype_manual(labels = legend_labels, values = c("solid", "dotted", "dashed", "dashed")) +
+    theme_aagi() +
+    facet_grid(. ~ dist_type) +
+    theme(
+      aspect.ratio = 1, 
+      plot.caption = element_text(hjust = 0, size = 17),
+      legend.background = element_rect(color = NA), 
+      legend.title = element_blank(),
+      legend.position = if (dist_type == "Skewed Distribution") c(0.7, 0.6) else "none", 
+      axis.title.y = if (dist_type == "Normal Distribution") element_text(size = 20) else element_blank(),
+      axis.title.x = if (dist_type == "Bimodal Distribution") element_text(size = 20) else element_blank(),
+      plot.margin = if (dist_type == "Bimodal Distribution") margin(0,3,0,3, "pt") else margin(0,0,0,0, "pt"), 
+      strip.text = element_text(size = 22), 
+      axis.text.x = element_text(size = 17),
+      axis.text.y = element_text(size = 17),
+      legend.text = element_text(size = 20)   
+    )
+}
+
+# Create each plot with the function, adding the relevant caption
+normal_plot <- 
+  create_histogram_plot(
+    eda_data %>% filter(dist_type == "Normal Distribution"), 
+    "Normal Distribution", 
+    "Histogram of a normal distribution with a symmetrical, bell-shaped curve, where data clusters around the mean, median, and mode. This pattern supports many statistical methods, making analysis simpler and more reliable."
+    )
+
+skewed_plot <- 
+  create_histogram_plot(
+    eda_data %>% filter(dist_type == "Skewed Distribution"), 
+    "Skewed Distribution", 
+    "Histogram of a skewed distribution with a longer tail on one side, where the average is pulled toward the tail. This uneven spread can distort analysis, often requiring special methods to interpret accurately."
+    )
+
+bimodal_plot <- 
+  create_histogram_plot(
+    eda_data %>% filter(dist_type == "Bimodal Distribution"), 
+    "Bimodal Distribution", 
+    "Histogram of a bimodal distribution with two peaks, showing two distinct groups within the data. This pattern suggests different underlying factors may be at play, so assuming one main trend could lead to inaccurate analysis."
+    )
+
+# Combine plots using patchwork
+histogram_distribution_combined <- normal_plot + bimodal_plot + skewed_plot +
+  plot_layout(ncol = 3, axes = "collect", axis_title = "collect") +
+  theme(plot.margin = margin(0, 0, 0, 0, "pt"))
+
+# Print the combined plot
+histogram_distribution_combined
+```
+
+**Overview:** A histogram is a graphical representation of numerical data that organises values into intervals, known as bins, and displays how frequently each value occurs using bars. It provides a straightforward and powerful way to visualise the distribution of data, making it easier to identify patterns, trends, and anomalies.
+
+Histograms are particularly useful for understanding the shape and spread of a dataset. They help assess whether the data follows a normal distribution, with most values clustering around the centre, or if the data is skewed, indicating that values tend to concentrate at one extreme. Additionally, histograms are useful for spotting outliers (values that fall far outside the majority of the data points) which can have a significant impact on statistical analysis.
+
+**Interpretation:** When interpreting a histogram, focus on the height and position of the bars. Taller bars indicate that many data points fall within a particular range, while shorter bars suggest fewer data points in those intervals.
+
+If the bars are evenly distributed around the centre, the data is likely normally distributed, resembling a bell curve. If the histogram has a rightward tail (longer bars on the right side), it suggests a right-skewed (positively skewed) distribution, where lower values are more frequent. Conversely, a leftward tail indicates a left-skewed (negatively skewed) distribution, where higher values dominate.
+
+Histograms can also reveal distinct subgroups or bimodal distributions if multiple peaks are visible, and they can highlight outliers that fall outside the main concentration of data.
+
+## Box Plots
+
+```{r boxplot-examples-scaled-for-web}
+#| echo: false
+#| warning: false
+
+############################ annotated boxplot #################
+# Filter the data for the "Normal Distribution" only
+normal_data <- eda_data %>% filter(dist_type == "Normal Distribution") |> 
+  mutate(facet_label = "Interpreting Box Plots")
+
+# Calculate the original IQR and identify outliers
+q1 <- quantile(normal_data$value, 0.25) #42.9
+q3 <- quantile(normal_data$value, 0.75) #56.4
+med <- quantile(normal_data$value, 0.5)
+iqr <- q3 - q1
+
+# Define outlier limits
+lower_bound <- q1 - 1.5 * iqr
+upper_bound <- q3 + 1.5 * iqr
+
+# Set new limits for the non-outliers
+new_min <- 35  # Adjust this value as needed
+new_max <- 65  # Adjust this value as needed
+
+# Adjust values
+normal_data <- normal_data %>%
+  mutate(value = case_when(
+    value < new_min ~ new_min,  # Shift below new_min to new_min
+    value > new_max ~ new_max,  # Shift above new_max to new_max
+    value < lower_bound ~ lower_bound + (lower_bound - new_min) * 0.1,  # Bring lower outliers closer to the lower whisker
+    value > upper_bound ~ upper_bound - (new_max - upper_bound) * 0.1,  # Bring upper outliers closer to the upper whisker
+    TRUE ~ value  # Keep original value otherwise
+  ))
+
+# Generate a boxplot for the Normal Distribution with annotations
+eda_boxplot_annotated <- ggplot(normal_data, aes(x = value, y = dist_type)) +
+  geom_boxplot(outlier.shape = 19, outlier.size = 1, outlier.color = "#ec8525", fill = "#F2F2F2", color = "#414042", coef = 0.56) +
+  theme_aagi() +
+  facet_wrap(~ facet_label) +
+   theme(axis.title = element_blank(), 
+         axis.text.y = element_blank(), 
+         plot.caption = element_text(hjust = 0, size = 17), 
+         plot.margin = margin(0,10,0,0, "pt"), 
+         strip.text = element_text(size = 22), 
+         axis.text.x = element_text(size = 17)
+    )+
+geom_segment(aes(x = quantile(value, 0.25), xend = quantile(value, 0.25), 
+                y = 0.5, yend = 1.50), colour = "#54921E", size = 0.9) +
+geom_segment(aes(x = quantile(value, 0.75), xend = quantile(value, 0.75), 
+                 y = 0.5, yend = 1.50), colour = "#54921E", size = 0.9) +
+geom_segment(aes(x = quantile(value, 0.5), xend = quantile(value, 0.5), 
+                 y = 1.35, yend = 1.42), colour = "#54921E", size = 0.9) +
+  annotate("text", x = med, y = 0.55, label = "Inter Quartile Range (IQR)", size = 9/.pt) +
+  annotate("text", x = 42.9, y = 1.55, label  = "Lower Quartile (Q1)", size = 9/.pt) +
+  annotate("text", x = 56.4, y = 1.55, label = "Upper Quartile (Q3)", size = 9/.pt) +
+  annotate("text", x = med, y = 1.47, label = "Median", size = 9/.pt) +
+  annotate("text", x = 38.91, y = 1.05, label = "Lower Whisker", size = 9/.pt) +
+  annotate("text", x = 60.07, y = 1.05, label = "Upper Whisker", size = 9/.pt) +
+geom_segment(aes(x = 64.6, xend = 64.6, 
+                 y = 1.04, yend = 1.17), colour = "#54921E", size = 0.7) +
+  annotate("text", x = 64.5, y = 1.23, label = "Outliers", size = 9/.pt) +
+  labs(caption = str_wrap("Box plots provide a concise summary of a dataset’s distribution. The central box represents the middle 50% of values, spanning from the first quartile (Q1) to the third quartile (Q3). A line inside the box marks the median, or the midpoint of the data.The \"whiskers\" extend to the smallest and largest values within a typical range, which is determined using the interquartile range (IQR). Specifically, values are included within the range from Q1 minus 1.5 times the IQR to Q3 plus 1.5 times the IQR. Any values outside this range are considered outliers and are shown as individual points, indicating they may require further investigation.In this example, the relatively balanced spacing of the box and whiskers suggests that the data may follow a normal distribution.", 74))
+
+################### Comparing Groups Boxplot ####################
+#data for example boxplots:
+box_data <- data.frame(
+  group = factor(rep(letters[1:3], each = 100)),
+  value = c(rnorm(100, 50, 10), rnorm(100, 60, 12), rnorm(100, 70, 15))
+)
+
+eda_boxplot_groups <- ggplot(box_data |>
+         mutate(facet_label = "Comparing Groups"), aes(x = group, y = value, fill = group)) +
+  geom_boxplot(outlier.shape = 19, outlier.size = 1, outlier.color = "#ec8525", fill = c("#F2F2F2", "#648fd2", "#ffbc42"), , color = "#414042", coef = 0.56) +
+  labs(x = "Group (E.g., Variety)",
+       y = "Value (E.g., Yield)",
+       caption = str_wrap("Box plots provide a clear, visual comparison of distributions across groups, highlighting differences in median, spread, and potential outliers.", 36)) +
+  theme_aagi() +
+  facet_wrap(~ facet_label) +
+   theme(
+         # axis.title.y = element_text(size = 20), 
+         axis.title = element_text(size = 20),
+         plot.caption = element_text(hjust = 0, size = 17),
+         plot.margin = margin(0,0,0,0, "pt"), 
+         strip.text = element_text(size = 22), 
+         axis.text = element_text(size = 17), 
+         # axis.text.y = element_text(size = 17)
+    )
+
+#Combine plots using patchwork
+eda_boxplots_combined <-  
+  eda_boxplot_annotated +
+  eda_boxplot_groups +
+  plot_layout(ncol = 2, 
+              width = c(2.2,1)) +
+  theme(plot.margin = margin(0, 0, 0, 0, "pt"))
+
+# Print the combined plot
+eda_boxplots_combined
+```
+
+**Overview:** A box plot, or box-and-whisker plot, is a graphical tool used to summarise the distribution of a dataset by highlighting key statistics, such as the median, quartiles, and potential outliers. It provides a compact yet effective way to visualise data spread and is particularly useful for comparing multiple datasets side by side.
+
+Box plots are especially valuable in exploratory data analysis. They make it easy to identify patterns, detect outliers, and assess the overall distribution of data without requiring extensive numerical summaries. Additionally, they are ideal for evaluating consistency in experimental data, comparing categories, and detecting anomalies, offering a straightforward approach to understanding the structure of a dataset.
+
+**Interpretation:** A box plot displays the interquartile range (IQR) and provides a visual summary of the dataset’s distribution. The box represents the IQR, containing the middle 50% of the data, with the line inside the box marking the median, or central value. The whiskers extend outward to show the range of most data points, typically bounded by the lower limit (Q1 − 1.5 × IQR) and the upper limit (Q3 + 1.5 × IQR). Any data points that fall outside this range are considered outliers and are displayed as individual dots.
+
+When interpreting a box plot, the position of the median within the box is important. If the median is closer to one end, it suggests a skewed distribution. A longer whisker on one side indicates that the data is more spread out in that direction. Outliers, visible as dots outside the whiskers, highlight unusual data points that may require further examination.
+
+Comparing multiple box plots allows for an assessment of differences in IQR, median placement, and outliers, which can provide insights into the variation between datasets.
+
+## Scatter Plots
+
+```{r scatter-plot-example, fig.width=6.4, fig.height=4.3}
+#| echo: false
+#| warning: false
+
+# Set seed for reproducibility
+set.seed(42)
+
+# Create data for scatter plot examples
+# Strong linear correlation
+linear_data <- data.frame(x = 1:100, y = 1:100 + rnorm(100, sd = 5))
+
+# Non-linear correlation
+curve_data <- data.frame(x = seq(-10, 10, length.out = 100),
+                          y = (seq(-10, 10, length.out = 100))^2 + rnorm(100, sd = 5))
+
+# Two groups with different slopes
+group1_data <- data.frame(x = rnorm(50, mean = 10, sd = 5),
+                           y = 0.5 * rnorm(50, mean = 10, sd = 5) + 5)  # Shallower slope
+group2_data <- data.frame(x = rnorm(50, mean = 20, sd = 5),
+                           y = 1.5 * rnorm(50, mean = 20, sd = 5) + 10)  # Steeper slope
+two_groups_data <- rbind(data.frame(Group = 'Group 1', group1_data),
+                          data.frame(Group = 'Group 2', group2_data))
+
+# Strong Linear Correlation
+eda_scatterplot_linear <- ggplot(
+  linear_data |> mutate(facet_label = "Strong Linear Correlation"), 
+  aes(x = x, y = y)
+  ) +
+  geom_point(color = "#414042") +
+  geom_smooth(method = 'lm', se = FALSE#, 
+              # colour = "#ffbc42"
+              ) +
+  theme_aagi() +
+  facet_grid(~facet_label) +
+  labs(ylab = "y", caption = str_wrap("This scatter plot shows a strong linear correlation between two variables, with data points clustering tightly around the fitted line. This pattern indicates a predictable relationship, where increases in one variable lead to increases in the other, simplifying predictive modeling as well as the interpretation of subsequent statistical analysis.", 31)) +
+  theme(
+    aspect.ratio = 1,
+    plot.caption = element_text(hjust = 0, size = 9),
+    axis.title.x = element_blank(),
+    axis.title.y = element_text(),
+    plot.margin = margin(0,0,0,0, "pt")
+  )
+
+# Obvious Curve
+eda_scatterplot_curved <- ggplot(
+  curve_data |> mutate(facet_label = "Curved Relationship"), aes(x = x, y =y)
+  ) +
+  geom_point(color = "#414042") +
+  geom_smooth(method = 'loess', se = FALSE#, 
+              # colour = "#ffbc42"
+              ) +
+  theme_aagi() +
+  facet_grid(.~facet_label) +
+  labs(xlab = "x", caption = str_wrap("This plot reveals a non-linear, curved relationship between two variables. The fitted line emphasizes this curvature, suggesting that the relationship is more complex than a simple linear trend. Such curvature affects the correlation and the modeling approaches needed to capture the underlying dynamics accurately.", 30)) +
+  theme(
+    aspect.ratio = 1,
+    plot.caption = element_text(hjust = 0, size = 9),
+    axis.title.x = element_text(),
+    axis.title.y = element_blank(),
+    plot.margin = margin(0,3,0,3, "pt")
+  )
+
+# Two Groups with Different Slopes
+eda_scatterplot_groups <- ggplot(
+  two_groups_data |> mutate(facet_label = "Group Comparison"), 
+  aes(x = x, y = y, color = Group)
+  ) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE) +  # Add regression lines for each group
+  theme_aagi() +
+  facet_grid(.~facet_label) +
+  labs(caption = str_wrap("This scatter plot displays two distinct groups, each with a different slope. Group 1 has a shallower slope, indicating a slower increase in the y-axis variable as the x-axis rises, while Group 2 shows a steeper slope, suggesting a more rapid increase. Such visual comparisons help understand variable interactions, highlight trends, and guide model selection.", 30)) +
+  theme(
+    aspect.ratio = 1,
+      plot.caption = element_text(hjust = 0, size = 9),
+      legend.background = element_rect(color = NA), 
+      legend.title = element_blank(),
+      # legend.position = c(0.8, 0.3),
+      legend.key =element_rect(colour = "transparent", fill = "transparent"),
+      axis.title.y = element_blank(),
+      axis.title.x = element_blank(),
+      plot.margin = margin(0,0,0,0, "pt"), 
+      legend.position = "none"
+      ) +
+  # scale_colour_manual(values = c( "#54921E","#ec8525")) #+
+scale_colour_manual(values = c("#648fd2", "#ec8525")) +
+  annotate("text", x = 9, y = 50, label = "Group 1", size = 9/.pt) +
+  annotate("text", x = 9, y = 18, label = "Group 2", size = 9/.pt)
+ 
+ # Combine plots using patchwork
+eda_scatterplots_combined <- eda_scatterplot_linear + eda_scatterplot_curved + eda_scatterplot_groups +
+  plot_layout(ncol = 3, axes = "collect", axis_title = "collect") +
+  theme(plot.margin = margin(0, 0, 0, 0, "pt"))
+
+# Print the combined plot
+eda_scatterplots_combined
+```
+
+**Overview:** A scatter plot is a graphical tool used to visualise the relationship between two numerical variables by displaying individual data points on a Cartesian plane. Each point represents a single observation, with its position determined by the values of both variables—typically plotted along the x-axis (independent variable) and y-axis (dependent variable). This makes scatter plots particularly useful for identifying patterns, correlations, and trends within a dataset.
+
+The primary purpose of a scatter plot is to reveal the relationship between two numerical variables. It helps to identify potential correlations (positive, negative, or none), assess the strength of the relationship, and detect outliers or anomalies. Scatter plots are essential in statistical analysis for exploring relationships, making predictions, and determining whether a linear or non-linear trend exists between variables.
+
+**Interpretation:** Scatter plots provide key insights into the direction and strength of a relationship between the variables. If the data points tend to form an upward-sloping pattern, it suggests a positive correlation, meaning that as one variable increases, the other also increases. Conversely, a negative correlation is indicated by a downward-sloping pattern, where an increase in one variable corresponds to a decrease in the other. A random scattering of points with no clear pattern suggests there is little to no correlation between the two variables.
+
+The density and spread of the points can also give clues about the relationship's strength. A tight cluster of points along a clear trend line suggests a strong relationship, whereas a more dispersed pattern points to a weaker relationship. Outliers, or points far removed from the general cluster, can signal unusual observations that may need further examination.

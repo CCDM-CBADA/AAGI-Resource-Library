@@ -1,0 +1,11 @@
+---
+title: "Introduction"
+---
+
+Analytics for the Australian Grain Industry (AAGI) delivers high-quality analysis, research and development, consultancy, and capacity-building services to the Australian grains research, development and extension (RD&E) sector. Our mission is to help Australian grain growers enhance profitability and competitiveness on the global stage by providing actionable insights from data analysis.
+
+This guide is specifically designed to help you interpret the results and outputs provided by AAGI. Understanding the results of statistical analysis is essential for making data-driven decisions, and our goal is to ensure that AAGI analysis outputs are both clear and actionable.
+
+If you have any questions or need assistance with interpreting specific aspects of your analysis, the AAGI team is here to support you.
+
+While this guide aims to clarify common outputs, data interpretation is an ongoing process. We are always available to help you fully understand the "what," "how," and "why" behind the analysis, ensuring that you can extract the maximum value from your data.

@@ -1,0 +1,10 @@
+---
+title: "Count Data!"
+author: "Rose"
+---
+
+Hello
+
+```{r}
+print("ligma")
+```
