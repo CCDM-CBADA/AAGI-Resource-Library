@@ -2,7 +2,7 @@ project:
   type: website
   output-dir: docs
 
-execute: 
+execute:
   freeze: auto
 
 website:
@@ -28,7 +28,6 @@ website:
 format:
   html:
     theme:
-      - simplex
-      - brand
-    css: styles.css
+        light: [flatly, scss/light.scss]
+    css: scss/styles.css
     toc: true
